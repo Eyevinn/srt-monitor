@@ -63,7 +63,7 @@ services:
     ports:
       - "8300:8300/tcp"
   monitor:
-    image: srt-monitor:dev
+    image: eyevinntechnology/srt-monitor
     depends_on:
       - ingest
       - egress
