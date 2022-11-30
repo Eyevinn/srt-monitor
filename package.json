@@ -1,0 +1,40 @@
+{
+  "name": "@eyevinn/srt-monitor",
+  "version": "0.1.0",
+  "description": "SRT Confidence Monitor",
+  "main": "dist/server.js",
+  "scripts": {
+    "build": "tsc --project ./",
+    "build:ui": "parcel build src/ui/index.html",
+    "dev": "NODE_ENV=development tsc-watch --noClear -p ./tsconfig.json --onSuccess \"node --inspect ./dist/server.js\"",
+    "dev:ui": "parcel -p 1234 --no-cache src/ui/index.html",
+    "server": "node ./dist/server.js",
+    "start": "npm run server",
+    "postversion": "git push && git push --tags",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "targets": {
+    "main": false,
+    "default": {
+      "distDir": "./dist/ui",
+      "publicUrl": "/"
+    }
+  },
+  "author": "Eyevinn Technology <work@eyevinn.se>",
+  "contributors": [
+    "Jonas Birmé <jonas.birme@eyevinn.se> (Eyevinn Technology AB)"
+  ],
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@eyevinn/webrtc-player": "^0.9.0",
+    "@fastify/cors": "^8.2.0",
+    "@fastify/static": "^6.5.1",
+    "fastify": "^4.10.2"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.9",
+    "parcel": "^2.8.0",
+    "tsc-watch": "^5.0.3",
+    "typescript": "^4.9.3"
+  }
+}
