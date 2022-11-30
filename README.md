@@ -25,7 +25,7 @@ Access the monitor at `http://localhost:3000`
 
 If you're interested in contributing to the project:
 
-- We welcome all people who want to contribute in a healthy and constructive manner within our community. To help us create a safe and positive community experience for all, we require all participants to adhere to the [Code of Conduct](docs/CODE_OF_CONDUCT.md).
+- We welcome all people who want to contribute in a healthy and constructive manner within our community. To help us create a safe and positive community experience for all, we require all participants to adhere to the [Code of Conduct](CODE_OF_CONDUCT.md).
 - If you are looking to make a code change first learn how to setup your local development environment below. Then create a Pull Request with suggested changes.
 - Report, triage bugs or suggest enhancements.
 - Help others by answering questions.
