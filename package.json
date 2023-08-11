@@ -1,6 +1,6 @@
 {
   "name": "@eyevinn/srt-monitor",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "SRT Confidence Monitor",
   "main": "dist/server.js",
   "scripts": {
