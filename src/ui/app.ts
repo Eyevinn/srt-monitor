@@ -9,7 +9,7 @@ window.addEventListener('DOMContentLoaded', async () => {
       type: 'whep'
     });
 
-    await player.load(new URL(`http://${window.location.hostname}:8300/whep/channel/monitor`));
+    await player.load(new URL(`http://${window.location.hostname}:8000/channel`));
 
     video.muted = true;
     video.controls = true;

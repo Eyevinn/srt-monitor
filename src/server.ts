@@ -5,28 +5,23 @@ import { Monitor } from './monitor';
 
 const IP = process.env.IP || '0.0.0.0';
 const DEST_IP = process.env.DEST_IP;
-const SRC_PORT = process.env.SRC_PORT;
-const SRT_PORT = process.env.SRT_PORT ? parseInt(process.env.SRT_PORT) : 1234;
-const DEST_PORT = process.env.DEST_PORT ? parseInt(process.env.DEST_PORT) : SRT_PORT;
-const WHIP_IP = process.env.WHIP_IP || '127.0.0.1';
-const WHIP_PORT = process.env.WHIP_PORT ? parseInt(process.env.WHIP_PORT) : 8200;
-const WHIP_URL = `http://${WHIP_IP}:${WHIP_PORT}/api/v2/whip/sfu-broadcaster?channelId=monitor`;
+const SRC_PORT = process.env.SRC_PORT ? parseInt(process.env.SRC_PORT) : 1234;
+const DEST_PORT = process.env.DEST_PORT ? parseInt(process.env.DEST_PORT) : 2345;
+const WHEP_PORT = process.env.WHEP_PORT ? parseInt(process.env.WHEP_PORT) : 8000;
+const WHEP_HOSTNAME = process.env.WHEP_HOSTNAME || 'localhost';
 
 if (!DEST_IP) {
   console.error(`Missing DEST_IP`);
   process.exit(1);
 }
-console.log(`source=srt://${IP}:${SRC_PORT}=>${SRT_PORT}, dest=srt://${DEST_IP}:${DEST_PORT}`);
-console.log(`whipUrl=${WHIP_URL}`);
+console.log(`source=srt://${IP}:${SRC_PORT}, dest=srt://${DEST_IP}:${DEST_PORT}`);
+console.log(`whepUrl=http://${WHEP_HOSTNAME}:${WHEP_PORT.toString()}/channel`);
 
-// ./whip-mpegts -a $IP -p $SRT_PORT -u $WHIP_URL -r $DEST_IP -o $DEST_PORT -s
 const opts = [
-  '-a', IP,
-  '-p', SRT_PORT.toString(),
-  '-u', WHIP_URL,
-  '-r', DEST_IP,
-  '-o', DEST_PORT.toString(),
-  '-s'
+  '-i', `${IP}:${SRC_PORT.toString()}`,
+  '-o', `${DEST_IP}:${DEST_PORT.toString()}`,
+  '-p', `${WHEP_PORT.toString()}`,
+  '-s', 'listener'
 ];
 
 const monitor = new Monitor(opts);
