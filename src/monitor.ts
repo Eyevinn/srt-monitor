@@ -1,6 +1,6 @@
 import { spawn } from 'child_process';
 
-const CMD = process.env.CMD || '/app/whip-mpegts';
+const CMD = process.env.CMD || '/app/srt-whep';
 
 export class Monitor {
   private args: string[];
@@ -15,7 +15,7 @@ export class Monitor {
     this.proc.stdout.on('data', data => { console.log(`${data}`); });
     this.proc.stderr.on('data', data => { console.log(`${data}`); });
     this.proc.on('exit', code => {
-      console.log(`whip-mpegts has stopped code=${code}`);
+      console.log(`srt-whep has stopped code=${code}`);
       console.log('restarting...');
       this.start();
     });

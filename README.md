@@ -7,16 +7,32 @@ A Docker container that receives and passthrough MPEG-TS over SRT while providin
 
 ![Screenshot of application](screenshot.png)
 
-## Run SRT Monitor
+## Getting started
 
-To receive MPEG-TS on port 9998 and pass-through to port 9999.
+As a demonstration we will start an SRT receiver in listener mode using ffplay
 
 ```
-SRC_PORT=9998 \
-DEST_IP=<destination ip> \
-DEST_PORT=9999 \
-  curl -SL https://github.com/Eyevinn/srt-monitor/releases/download/v0.1.0/docker-compose.yml \
-    docker-compose -f - up
+ffplay "srt://127.0.0.1:2345?mode=listener"
+```
+
+We will then run the container with the following options to receive MPEG-TS over SRT on port 1234 and pass-through to port 2345 on host machine, i.e the SRT receiver based on ffplay.
+
+```
+docker run --rm \
+  -e DEST_IP=host.docker.internal \
+  -p 1234:1234/udp \
+  -p 8000:8000 \
+  -p 3000:3000 \
+  eyevinntechnology/srt-monitor
+```
+
+Generate a test source stream. In this example we are using gstreamer but other tools can be used.
+
+```
+gst-launch-1.0 -v \    
+    videotestsrc ! clockoverlay ! video/x-raw, height=360, width=640 ! videoconvert ! x264enc tune=zerolatency ! video/x-h264, profile=constrained-baseline ! mux. \
+    audiotestsrc ! audio/x-raw, format=S16LE, channels=2, rate=44100 ! audioconvert ! voaacenc ! aacparse ! mux. \
+    mpegtsmux name=mux ! queue ! srtsink uri="srt://127.0.0.1:1234?mode=caller" wait-for-connection=false
 ```
 
 Access the monitor at `http://localhost:3000`
@@ -32,26 +48,19 @@ If you're interested in contributing to the project:
 
 ## Development Environment
 
-Install whip-mpegts from Homebrew:
+Install srt-whep with cargo:
 
 ```
-brew install eyevinn/tools/whip-mpegts
-```
-
-Start a local WHIP/WHEP instance:
-
-```
-curl -SL https://github.com/Eyevinn/whip-whep/releases/download/v0.2.0/docker-compose.yml | \
-  docker-compose -f - up
+cargo install srt_whep
 ```
 
 Start service in development / watch mode:
 
 ```
-SRT_PORT=9998 \
+SRC_PORT=9998 \
   DEST_IP=127.0.0.1 \
   DEST_PORT=9999 \
-  CMD=/opt/homebrew/bin/whip-mpegts \
+  CMD=~/.cargo/bin/srt-whep \
   npm run dev
 ```
 
@@ -61,16 +70,19 @@ Monitor is then available at `http://localhost:3000/`. And optionally if you wan
 npm run dev:ui
 ```
 
-Generate a source stream with ffmpeg:
+Generate a source stream with gstreamer:
 
 ```
-ffmpeg -re -stream_loop -1 -i <FILE> -acodec copy -vcodec copy -f mpegts "srt://127.0.0.1:9998?pkt_size=1316"
+gst-launch-1.0 -v \    
+    videotestsrc ! clockoverlay ! video/x-raw, height=360, width=640 ! videoconvert ! x264enc tune=zerolatency ! video/x-h264, profile=constrained-baseline ! mux. \
+    audiotestsrc ! audio/x-raw, format=S16LE, channels=2, rate=44100 ! audioconvert ! voaacenc ! aacparse ! mux. \
+    mpegtsmux name=mux ! queue ! srtsink uri="srt://127.0.0.1:1234?mode=caller" wait-for-connection=false
 ```
 
-And optionally an SRT dummmy consumer endpoint:
+And optionally an SRT dummy consumer endpoint:
 
 ```
-ffmpeg -re -i "srt://127.0.0.1:9999?mode=listener" -f null /dev/null
+ffplay "srt://127.0.0.1:2345?mode=listener"
 ```
 
 ## License (Apache-2.0)
