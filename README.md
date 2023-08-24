@@ -9,13 +9,7 @@ A Docker container that receives and passthrough MPEG-TS over SRT while providin
 
 ## Getting started
 
-As a demonstration we will start an SRT receiver in listener mode using ffplay
-
-```
-ffplay "srt://127.0.0.1:2345?mode=listener"
-```
-
-We will then run the container with the following options to receive MPEG-TS over SRT on port 1234 and pass-through to port 2345 on host machine, i.e the SRT receiver based on ffplay.
+Start the container with the following options to receive MPEG-TS over SRT on port 1234 and pass-through to port 2345 on host machine.
 
 ```
 docker run --rm \
@@ -29,10 +23,10 @@ docker run --rm \
 Generate a test source stream. In this example we are using gstreamer but other tools can be used.
 
 ```
-gst-launch-1.0 -v \    
-    videotestsrc ! clockoverlay ! video/x-raw, height=360, width=640 ! videoconvert ! x264enc tune=zerolatency ! video/x-h264, profile=constrained-baseline ! mux. \
-    audiotestsrc ! audio/x-raw, format=S16LE, channels=2, rate=44100 ! audioconvert ! voaacenc ! aacparse ! mux. \
-    mpegtsmux name=mux ! queue ! srtsink uri="srt://127.0.0.1:1234?mode=caller" wait-for-connection=false
+gst-launch-1.0 -v \
+  videotestsrc ! clockoverlay ! video/x-raw, height=360, width=640 ! videoconvert ! x264enc tune=zerolatency ! video/x-h264, profile=constrained-baseline ! mux. \
+  audiotestsrc ! audio/x-raw, format=S16LE, channels=2, rate=44100 ! audioconvert ! voaacenc ! aacparse ! mux. \
+  mpegtsmux name=mux ! queue ! srtsink uri="srt://127.0.0.1:1234?mode=caller" wait-for-connection=false
 ```
 
 Access the monitor at `http://localhost:3000`
