@@ -11,11 +11,10 @@ RUN npm install
 RUN npm run build
 RUN npm run build:ui
 
+## Based on Debian
 FROM eyevinntechnology/srt-whep:v1.1.3
 
-RUN apt-get install -y curl
-RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
-RUN apt-get install -y nodejs
+RUN apt-get install -y nodejs npm
 
 WORKDIR /app
 COPY --from=0 /src/dist ./dist
