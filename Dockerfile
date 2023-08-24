@@ -11,7 +11,7 @@ RUN npm install
 RUN npm run build
 RUN npm run build:ui
 
-FROM eyevinntechnology/srt-whep:v1.1.0
+FROM eyevinntechnology/srt-whep:v1.1.3
 
 RUN apt-get install -y curl
 RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
